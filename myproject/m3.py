@@ -23,10 +23,11 @@ class ConicalSurface2(ThreeDScene):
         camera = self.camera.frame
         camera.set_euler_angles(phi=PI/2.5, theta=PI/2+0.1)
         # 坐标轴
-        axes = ThreeDAxes(z_axis_config={'include_tip': True, 'include_numbers': True},
-                          axis_config={'include_tip': True, 'include_numbers': True})
-        axes.add_axis_labels()
-        self.add(axes[0][0])
+        axes = myThreeDAxes()
+        lables=axes.get_axis_labels()
+        num  = axes.get_numbers()
+        self.add(lables,num,set_depth_test=False)
+        self.add(axes)
 
         # updater
         count = 0

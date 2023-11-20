@@ -24,10 +24,11 @@ class SphereSurface(ThreeDScene):
         camera:CameraFrame = self.camera.frame
         camera.set_euler_angles(phi=PI/2.5, theta=PI/2+0.2)
         # 坐标轴
-        axes = ThreeDAxes(z_axis_config={'include_tip': True, 'include_numbers': True},
-                          axis_config={'include_tip': True, 'include_numbers': True})
-        axes.add_axis_labels()
-
+        axes = myThreeDAxes()
+        lable = axes.get_axis_labels()
+        num = axes.get_numbers()
+        self.add(lable,num,set_depth_test=False)
+        
         # 球面
         sphere =SphereInAxes(axes,radius=2,color=BLUE,opacity=0.6)
         self.add(sphere)
@@ -70,12 +71,3 @@ class SphereSurface(ThreeDScene):
         self.play(camera.animate.set_theta(PI).set_phi(PI/2),run_time=3)
         self.play(camera.animate.set_theta(PI/2).set_phi(0),run_time=3)
         self.play(camera.animate.set_euler_angles( 2.20412966e+00,  3.92805571e-01, -2.88657986e-15))
-        
-
-
-        
-
-
-
-
-        
