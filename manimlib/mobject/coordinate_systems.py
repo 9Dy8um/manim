@@ -563,7 +563,50 @@ class ThreeDAxes(Axes):
             **kwargs
         )
 
+class myThreeDAxes(ThreeDAxes):
+    def __init__(self, 
+                 z_axis_config: dict = {'include_tip': True}, 
+                 axis_config={'include_tip': True},
+                 depth: float = 8, 
+                 flat_stroke: bool = False, 
+                 **kwargs):
+        
+        
+        super().__init__(z_axis_config=z_axis_config,
+                         axis_config=axis_config, 
+                         depth=depth, 
+                         flat_stroke=flat_stroke, 
+                         **kwargs)
 
+    def get_numbers(self):
+        num_dict=[{},{},{}]
+        axis=[RIGHT,UP,OUT]
+        der=[DOWN,LEFT,RIGHT]
+        ranges=self.get_all_ranges()
+        for index,i in enumerate(ranges):
+            cood = np.arange(i[0],i[1]+1,i[2]).reshape(-1,1)*axis[index]
+            for coodd in cood:
+                num_dict[index][f'{int(coodd.sum())}']=coodd
+        g = VGroup()
+
+        for index,axis_num in enumerate(num_dict):
+            del axis_num['0']
+            for k,v in axis_num.items():
+                tex:Tex=Tex(k,font_size=24).next_to(self.c2p(*v),der[index])
+                if index==2:
+                    tex.rotate(90*DEGREES,RIGHT)
+                g.add(tex)
+        return g
+    
+    def get_axis_labels(self, x_tex="x", y_tex="y", z_tex="z", font_size=24, buff=0.2):
+        labels = VGroup(*(
+            Tex(tex, font_size=font_size)
+            for tex in [x_tex, y_tex, z_tex]
+        ))
+        labels[2].rotate(PI / 2, RIGHT)
+        for label, axis in zip(labels, self):
+            label.next_to(axis, normalize(np.round(axis.get_vector()), 2), buff=buff)
+        return labels
 class NumberPlane(Axes):
     default_axis_config: dict = dict(
         stroke_color=WHITE,
